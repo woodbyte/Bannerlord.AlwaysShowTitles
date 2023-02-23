@@ -19,8 +19,6 @@ namespace Bannerlord.AlwaysShowTitles.Patches
 
             internal static void Postfix(Hero __instance, ref TextObject __result)
             {
-                if (Settings.Instance != null && Settings.Instance.Disable) return;
-
                 if (!EnableNamePatch) return;
 
                 Hero hero = __instance;

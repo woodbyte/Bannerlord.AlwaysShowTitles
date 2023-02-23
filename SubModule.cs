@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+﻿using Bannerlord.AlwaysShowTitles.Behaviors;
+using HarmonyLib;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.Engine.Options;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace Bannerlord.AlwaysShowTitles
@@ -12,20 +12,13 @@ namespace Bannerlord.AlwaysShowTitles
         {
             var harmony = new Harmony("bannerlord.alwayshowtitles");
             harmony.PatchAll();
-
-            NativeOptions.OnNativeOptionsApplied += UpdateArmyNames;
         }
 
-        private void UpdateArmyNames()
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            if (Campaign.Current == null) return;
-
-            foreach (MobileParty item in MobileParty.All)
+            if (gameStarterObject is CampaignGameStarter cgs)
             {
-                if (item.Army != null)
-                {
-                    item.Army.UpdateName();
-                }
+                cgs.AddBehavior(new AlwaysShowTitlesBehavior());
             }
         }
     }
