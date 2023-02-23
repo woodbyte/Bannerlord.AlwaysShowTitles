@@ -48,7 +48,7 @@ namespace Bannerlord.AlwaysShowTitles.Patches
 
         [HarmonyPatch(typeof(Hero))]
         [HarmonyPatch(nameof(Hero.SetHeroEncyclopediaTextAndLinks))]
-        class Patch03
+        class Patch02
         {
             internal static void Prefix(Hero o)
             {
