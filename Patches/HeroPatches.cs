@@ -15,8 +15,6 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         [HarmonyPatch(nameof(Hero.Name), MethodType.Getter)]
         class Patch01
         {
-            static AccessTools.FieldRef<TextObject, string> textObjectValue = AccessTools.FieldRefAccess<TextObject, string>("Value");
-
             internal static void Postfix(Hero __instance, ref TextObject __result)
             {
                 if (!EnableNamePatch) return;
