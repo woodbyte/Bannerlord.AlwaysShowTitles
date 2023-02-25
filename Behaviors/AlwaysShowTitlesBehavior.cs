@@ -28,6 +28,8 @@ namespace Bannerlord.AlwaysShowTitles.Behaviors
 
         void UpdateArmyNames(bool disablePatch = false)
         {
+            if (Campaign.Current == null) return;
+
             HeroPatches.EnableNamePatch = !disablePatch;
 
             foreach (MobileParty item in MobileParty.All)
