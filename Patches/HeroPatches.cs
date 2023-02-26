@@ -23,7 +23,7 @@ namespace Bannerlord.AlwaysShowTitles.Patches
 
                 if (hero == NamePatchExcludedHero) return;
 
-                if (hero.IsLord && !hero.IsMinorFactionHero && hero.Clan?.Leader == hero && hero.Clan?.Kingdom != null)
+                if (hero.IsLord && !hero.IsMinorFactionHero && hero.Clan?.Leader == hero && hero.Clan?.Kingdom != null && hero.Clan?.IsUnderMercenaryService == false)
                 {
                     string stringId = hero.MapFaction.Culture.StringId;
                     GameTexts.TryGetText("str_faction_noble_name_with_title", out var text, stringId);
