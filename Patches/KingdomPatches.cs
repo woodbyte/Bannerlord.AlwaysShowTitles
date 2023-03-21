@@ -23,7 +23,7 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         }
 
         [HarmonyPatch(typeof(DecisionItemBaseVM))]
-        [HarmonyPatch("OnChangeVote")]
+        [HarmonyPatch("RefreshRelationChangeText")]
         class Patch02
         {
             internal static void Prefix()
