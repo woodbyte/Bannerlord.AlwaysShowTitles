@@ -15,9 +15,6 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         [HarmonyPatch(nameof(Hero.Name), MethodType.Getter)]
         class Patch01
         {
-            static AccessTools.FieldRef<Hero, TextObject> name =
-                AccessTools.FieldRefAccess<Hero, TextObject>("_name");
-
             static AccessTools.FieldRef<TextObject, string> value =
                 AccessTools.FieldRefAccess<TextObject, string>("Value");
 
@@ -30,11 +27,13 @@ namespace Bannerlord.AlwaysShowTitles.Patches
                 if (hero == NamePatchExcludedHero) return;
 
                 // Hide wanderer titles after they become lords
-                var textObjectValue = value(name(hero));
-                if (textObjectValue.Contains("{FIRSTNAME}") && !hero.IsWanderer && hero.IsLord)
+                var resultValue = value(__result);
+                if (resultValue.Contains("{FIRSTNAME}") && !hero.IsWanderer && hero.IsLord)
                 {
-                    value(name(hero)) = "{FIRSTNAME}";
-                    name(hero).CacheTokens();
+                    var firstName = __result.CopyTextObject();
+                    value(firstName) = "{FIRSTNAME}";
+                    firstName.CacheTokens();
+                    __result = firstName;
                 }
 
                 // Always show noble titles
