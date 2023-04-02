@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -15,6 +16,12 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         [HarmonyPatch(nameof(Hero.Name), MethodType.Getter)]
         class Patch01
         {
+            static AccessTools.FieldRef<Hero, TextObject> name =
+                AccessTools.FieldRefAccess<Hero, TextObject>("_name");
+
+            static AccessTools.FieldRef<TextObject, string> value =
+                AccessTools.FieldRefAccess<TextObject, string>("Value");
+
             internal static void Postfix(Hero __instance, ref TextObject __result)
             {
                 if (!EnableNamePatch) return;
@@ -23,6 +30,15 @@ namespace Bannerlord.AlwaysShowTitles.Patches
 
                 if (hero == NamePatchExcludedHero) return;
 
+                // Hide wanderer titles after they become lords
+                var textObjectValue = value(name(hero));
+                if (textObjectValue.Contains("{FIRSTNAME}") && !hero.IsWanderer && hero.IsLord)
+                {
+                    value(name(hero)) = "{FIRSTNAME}";
+                    name(hero).CacheTokens();
+                }
+
+                // Always show noble titles
                 if (hero.IsLord && !hero.IsMinorFactionHero && hero.Clan?.Leader == hero && hero.Clan?.Kingdom != null && hero.Clan?.IsUnderMercenaryService == false)
                 {
                     string stringId = hero.MapFaction.Culture.StringId;
