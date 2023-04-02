@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
