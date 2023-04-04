@@ -14,12 +14,12 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         {
             internal static void Prefix()
             {
-                HeroPatches.NamePatchExcludedHero = Campaign.Current.ConversationManager.OneToOneConversationHero;
+                HeroPatches.LordTitleExcludedHero = Campaign.Current.ConversationManager.OneToOneConversationHero;
             }
 
             internal static void Postfix()
             {
-                HeroPatches.NamePatchExcludedHero = null;
+                HeroPatches.LordTitleExcludedHero = null;
             }
         }
 
@@ -29,12 +29,12 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         {
             internal static void Prefix()
             {
-                HeroPatches.EnableNamePatch = false;
+                HeroPatches.EnableLordTitlePatch = false;
             }
 
             internal static void Postfix()
             {
-                HeroPatches.EnableNamePatch = true;
+                HeroPatches.EnableLordTitlePatch = true;
             }
         }
     }

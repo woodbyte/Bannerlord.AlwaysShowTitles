@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
@@ -9,7 +10,11 @@ namespace Bannerlord.AlwaysShowTitles.Patches
     internal class HeroPatches
     {
         internal static bool EnableNamePatch { get; set; } = true;
-        internal static Hero? NamePatchExcludedHero { get; set; } = null;
+
+        internal static bool EnableLordTitlePatch { get; set; } = true;
+        internal static Hero? LordTitleExcludedHero { get; set; } = null;
+
+        internal static bool EnableWandererTitlePatch { get; set; } = true;
 
         [HarmonyPatch(typeof(Hero))]
         [HarmonyPatch(nameof(Hero.Name), MethodType.Getter)]
@@ -24,17 +29,22 @@ namespace Bannerlord.AlwaysShowTitles.Patches
 
                 Hero hero = __instance;
 
-                if (hero == NamePatchExcludedHero) return;
-
                 // Hide wanderer titles after they become lords
-                var resultValue = value(__result);
-                if (resultValue.Contains("{FIRSTNAME}") && !hero.IsWanderer && hero.IsLord)
+                if (EnableWandererTitlePatch)
                 {
-                    var firstName = __result.CopyTextObject();
-                    value(firstName) = "{FIRSTNAME}";
-                    firstName.CacheTokens();
-                    __result = firstName;
+                    var resultValue = value(__result);
+
+                    if (resultValue.Contains("{FIRSTNAME}") && !hero.IsWanderer && hero.IsLord)
+                    {
+                        var firstName = __result.CopyTextObject();
+                        value(firstName) = "{FIRSTNAME}";
+                        firstName.CacheTokens();
+                        __result = firstName;
+                    }
                 }
+
+                if (!EnableLordTitlePatch) return;
+                if (hero == LordTitleExcludedHero) return;
 
                 // Always show noble titles
                 if (hero.IsLord && !hero.IsMinorFactionHero && hero.Clan?.Leader == hero && hero.Clan?.Kingdom != null && hero.Clan?.IsUnderMercenaryService == false)
@@ -64,13 +74,34 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         {
             internal static void Prefix(Hero o)
             {
-                NamePatchExcludedHero = o;
+                LordTitleExcludedHero = o;
             }
 
             internal static void Postfix(Hero o)
             {
-                NamePatchExcludedHero = null;
+                LordTitleExcludedHero = null;
             }
         }
+
+        //[HarmonyPatch(typeof(EncyclopediaHeroPageVM))]
+        //[HarmonyPatch("UpdateInformationText")]
+        //class Patch03
+        //{
+        //    static AccessTools.FieldRef<EncyclopediaHeroPageVM, Hero> _hero =
+        //        AccessTools.FieldRefAccess<EncyclopediaHeroPageVM, Hero>("_hero");
+
+        //    internal static void Postfix(EncyclopediaHeroPageVM __instance)
+        //    {
+        //        var hero = _hero(__instance);
+
+        //        if (__instance.InformationText != "")
+        //            return;
+
+        //        if (hero.CharacterObject.Occupation == Occupation.Lord && hero.IsKnownToPlayer)
+        //        {
+        //            __instance.InformationText = Hero.SetHeroEncyclopediaTextAndLinks(hero).ToString();
+        //        }
+        //    }
+        //}
     }
 }

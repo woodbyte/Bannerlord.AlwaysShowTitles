@@ -12,12 +12,12 @@ namespace Bannerlord.AlwaysShowTitles.Patches
         {
             internal static void Prefix()
             {
-                HeroPatches.EnableNamePatch = false;
+                HeroPatches.EnableLordTitlePatch = false;
             }
 
             internal static void Postfix()
             {
-                HeroPatches.EnableNamePatch = true;
+                HeroPatches.EnableLordTitlePatch = true;
             }
         }
     }
